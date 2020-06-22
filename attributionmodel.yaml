@@ -1,0 +1,153 @@
+id: https://w3id.org/
+name: attribution-model
+description: Data model for attribution metadata for the curation and maintenance of research collections
+license: https://creativecommons.org/publicdomain/zero/1.0/
+
+types:
+  string:
+    base: str
+    uri: xsd:string
+  time:
+    uri: xsd:dateTime
+    base: XSDTime
+    repr: str
+    description: A time object represents a (local) time of day, independent of any particular day
+
+  ## ------
+  ## CLASSES
+  ## ------
+
+classes:
+
+  agent:
+    description: A person, group of people, or institution
+    slots:
+      - id
+      - name
+      - type
+      - aliases
+
+  activity:
+    description: 
+    slots:
+      - id
+      - starttime
+      - endtime
+      - reason
+
+  entity:
+    description: A specimen, subsample, collection, digital data object, or digital data set
+    slots:
+      - id
+      - label
+
+  role:
+    description: 
+    slots:
+      - id
+      - label
+
+  roleAssoc:
+    description:
+    slots:
+      - id
+
+  ## ------
+  ## SLOTS
+  ## ------
+
+slots:
+  id:
+    description: Unique identifier of a person
+    identifier: true
+
+  name:
+    description: human readable name
+    range: string
+
+  aliases:
+    is_a: name
+    description: An alternative name
+    multivalued: true
+
+  timepoint:
+    is_a: node property
+    range: time type
+    description: >-
+      a point in time
+
+  starttime:
+    is_a: timepoint
+    description:
+
+  endtime:
+    is_a: timepoint
+    description:
+
+  reason:
+    is_a: node property
+    description: Human-readable text describing why activity was needed
+
+  ## ------
+  ## ASSOCIATIONS
+  ## ------
+
+association:
+    description: >-
+      A typed association between two entities, supported by evidence
+    comments:
+      - This is roughly the model used by biolink and ontobio at the moment
+    slots:
+      - subject
+      - relation
+      - object
+      - association_id
+      - negated
+      - association type
+      - qualifiers
+      - publications
+      - provided by
+    mappings:
+      - OBAN:association
+      - "rdf:Statement"
+      - "owl:Axiom"
+
+  wasGeneratedBy:
+    is_a: association
+    description:
+    subject:
+      range: entity
+    object:
+      range: activity
+
+  wasAssociatedWith:
+    is_a: association
+    description:
+    subject:
+      range: activity
+    object:
+      range: agent
+
+  activityToRole:
+    is_a: association
+    description:
+    subject:
+      range: activity
+    object:
+      range: roleAssoc
+
+  roleToAgent:
+    is_a: association
+    description:
+    subject:
+      range: roleAssoc
+    object:
+      range: agent
+
+  assocToRole:
+    is_a: association
+    descriptions:
+    subject:
+      range: roleAssoc
+    object:
+      range: role
