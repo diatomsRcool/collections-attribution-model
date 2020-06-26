@@ -1,4 +1,4 @@
-SOURCES = kbase dwc gold neon mixs
+SOURCES = dwc
 EXTS = _datamodel.py .graphql .schema.json .owl -docs .shex
 
 all: $(foreach s,$(SOURCES), $(foreach x,$(EXTS), target/$s/$s$x))
@@ -12,30 +12,12 @@ test:
 	pytest tests/*py
 
 # these are then moved to test
-downloads/kbase/%:
-	curl -L -s https://raw.githubusercontent.com/kbaseIncubator/sample_service_validator_config/master/$* > $@
 downloads/dwc.csv:
 	curl -L -s https://raw.githubusercontent.com/tdwg/dwc/master/vocabulary/term_versions.csv > $@
 
 # run tests to first generate yaml; these are then copied to target area
-target/kbase/kbase.yaml: tests/kbase/kbase.yaml
-	cp $< $@
-target/neon/neon.yaml: tests/neon/neon.yaml
-	cp $< $@
-target/gold/gold.yaml: tests/gold/gold.yaml
-	cp $< $@
 target/dwc/dwc.yaml: tests/dwc/dwc.yaml
 	cp $< $@
-
-# mixs needs extra stuff
-target/mixs/mixs.yaml: 
-	cp ../nmdc-metadata/schema/mixs.yaml $@
-target/mixs/core.yaml: 
-	cp ../nmdc-metadata/schema/core.yaml $@
-target/mixs/prov.yaml: 
-	cp ../nmdc-metadata/schema/prov.yaml $@
-
-
 
 #vpath %_datamodel.py target/kbase target/neon
 
@@ -56,19 +38,12 @@ target/%.ttl: target/%.owl
 target/%-docs: target/%.yaml
 	pipenv run gen-markdown --dir $@ $<
 
-tests/gold/gold-schema.tsv:
-	./util/sql2tsv.pl tests/gold/schema/*.sql > $@
-tests/gold/gold-%-schema.tsv: tests/gold/schema/%.sql
-	./util/sql2tsv.pl $< > $@
-target/gold/biosample.ttl: tests/gold/biosample.yaml
-	gen-owl $< > $@
-
 deploy-docs:
 	$(foreach s,$(SOURCES), cp -pr target/$s/$s-docs/ docs/$s ;)
 
 ## Matches
 
-ONTS = envo uo bco obi datacite pato
+ONTS = vivo cro
 SRC_TTL = $(foreach s,$(SOURCES),target/$s/$s.ttl) $(foreach s,$(ONTS),ontologies/$s.ttl)
 mappings/matches.tsv: $(SRC_TTL)
 	rdfmatch -w mappings/weights.pro -i mappings/prefixes.ttl $(patsubst %, -i %, $(SRC_TTL)) match > $@
