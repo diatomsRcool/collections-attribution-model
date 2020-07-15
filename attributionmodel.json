@@ -21,6 +21,7 @@
                "type": "string"
             },
             "was_associated_with": {
+               "description": "assignment of responsibility to an agent for an activity",
                "type": "string"
             }
          },
@@ -69,6 +70,7 @@
                "type": "string"
             },
             "was_generated_by": {
+               "description": "production of an entity by an activity",
                "type": "string"
             }
          },
