@@ -7,10 +7,10 @@ prefixes:
   prov: http://www.w3.org/ns/prov#
   vivo: http://vivoweb.org/ontology/core#
   foaf: http://xmlns.com/foaf/0.1/
-  obi: http://purl.obolibrary.org/obo/
+  obi: http://purl.obolibrary.org/obo/OBI_
   xsd: http://www.w3.org/2001/XMLSchema#
-  cro: http://purl.obolibrary.org/obo/
-  sepio: http://purl.obolibrary.org/obo/
+  cro: http://purl.obolibrary.org/obo/CRO_
+  sepio: http://purl.obolibrary.org/obo/SEPIO_
 
 types:
   string:
@@ -48,7 +48,7 @@ classes:
       - was associated with
     mappings:
       - prov:Activity
-      - obi:OBI_0000011
+      - obi:0000011
 
   entity:
     description: A specimen, subsample, collection, digital data object, or digital data set
@@ -66,8 +66,8 @@ classes:
       - label
     mappings:
       - prov:Role
-      - cro:CRO_0000000
-      - sepio:SEPIO_0000048
+      - cro:0000000
+      - sepio:0000048
 
   role assoc:
     description: an association between an agent and an activity that includes the context-specific role of the agent
@@ -102,13 +102,23 @@ slots:
     description: >-
       a point in time
 
+  activitytime:
+    is_a: timepoint
+    description:
+    mappings:
+      - sepio:0000160
+
   starttime:
     is_a: timepoint
     description:
+    mappings:
+      - sepio:0000063
 
   endtime:
     is_a: timepoint
     description:
+    mappings:
+      - sepio:0000161
 
   reason:
     description: Human-readable text describing why activity was needed
@@ -124,7 +134,7 @@ slots:
     range: agent
     mappings:
       - prov:wasAssociatedWith
-      - sepio:SEPIO_0000017
+      - sepio:0000017
 
   qualified association:
     range: role assoc
